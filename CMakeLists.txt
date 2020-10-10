@@ -3,8 +3,6 @@ project(PhongShadingDemo)
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(COPY Resources DESTINATION ${CMAKE_BINARY_DIR})
-
 add_subdirectory(Vendor/GLFW)
 add_subdirectory(Vendor/GL3W)
 add_subdirectory(Vendor/GLM)
