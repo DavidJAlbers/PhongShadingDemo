@@ -11,13 +11,21 @@ add_subdirectory(Vendor/GLM)
 
 add_executable(PSD
         Source/main.cpp
+        Source/Core/Shader.cpp
+        Source/Core/Shader.h
+        Source/Core/Application.cpp
+        Source/Core/Application.h
+        Source/Core/VertexArray.cpp
+        Source/Core/VertexArray.h
+        Source/ControlPanel.cpp
+        Source/ControlPanel.h
+        Source/PSD.h
         Vendor/ImGui/imgui.cpp
         Vendor/ImGui/imgui_draw.cpp
         Vendor/ImGui/imgui_widgets.cpp
         Vendor/ImGui/imgui_demo.cpp
         Vendor/ImGui/examples/imgui_impl_opengl3.cpp
-        Vendor/ImGui/examples/imgui_impl_glfw.cpp
-        Source/Core/Shader.cpp Source/Core/Shader.h Source/Core/Application.cpp Source/Core/Application.h Source/Core/VertexArray.cpp Source/Core/VertexArray.h Source/ControlPanel.cpp Source/ControlPanel.h Source/PSD.h)
+        Vendor/ImGui/examples/imgui_impl_glfw.cpp)
 
 # FIXME Symlinks sind sehr problematisch. Aber copy, copy_if_different und copy_directory übernehmen scheinbar keine Änderungen
 add_custom_command(
