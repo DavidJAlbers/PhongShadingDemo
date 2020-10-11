@@ -9,6 +9,8 @@
 
 #include "Shader.h"
 
+#include "glm/ext.hpp"
+
 static std::string LoadSource(const std::string& Name, const std::string& Type)
 {
     std::ostringstream Path;
@@ -105,11 +107,20 @@ void PSD::FShader::SetVector3f(const std::string& Name, float* Value)
     glProgramUniform3fv(mProgramID, GetUniformLocation(Name), 1, Value);
 }
 
-int PSD::FShader::GetUniformLocation(const std::string& Name)
+void PSD::FShader::SetMatrix4f(const std::string& Name, const glm::mat4& Value)
 {
-    if (mUniformLocations.find(Name) != mUniformLocations.end())
-    {
-        mUniformLocations[Name] = glGetUniformLocation(mProgramID, Name.c_str());
-    }
-    return mUniformLocations[Name];
+    auto RawValue = glm::value_ptr(Value);
+    Bind();
+    glProgramUniformMatrix4fv(mProgramID, GetUniformLocation(Name), 1, GL_FALSE, RawValue);
+}
+
+int PSD::FShader::GetUniformLocation(const std::string& Name) const
+{
+// TODO This seems to be causing GL_INVALID_OPERATION sometimes. Look into it
+//    if (mUniformLocations.find(Name) != mUniformLocations.end())
+//    {
+//        mUniformLocations[Name] = glGetUniformLocation(mProgramID, Name.c_str());
+//    }
+//    return mUniformLocations[Name];
+    return glGetUniformLocation(mProgramID, Name.c_str());
 }

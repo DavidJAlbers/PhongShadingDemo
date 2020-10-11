@@ -18,6 +18,10 @@ add_executable(PSD
         Source/ControlPanel.cpp
         Source/ControlPanel.h
         Source/PSD.h
+        Source/GeometryObject.cpp
+        Source/GeometryObject.h
+        Source/Camera.cpp
+        Source/Camera.h
         Vendor/ImGui/imgui.cpp
         Vendor/ImGui/imgui_draw.cpp
         Vendor/ImGui/imgui_widgets.cpp

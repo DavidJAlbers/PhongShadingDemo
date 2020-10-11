@@ -71,7 +71,7 @@ void PSD::FApplication::Start()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-    mWindowHandle = glfwCreateWindow(720, 720, mApplicationName.c_str(), nullptr, nullptr);
+    mWindowHandle = glfwCreateWindow(1280, 720, mApplicationName.c_str(), nullptr, nullptr);
     if (!mWindowHandle)
     {
         std::exit(-1);

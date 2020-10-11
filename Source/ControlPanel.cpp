@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-PSD::FControlPanel::FControlPanel(GLFWwindow* Window)
+FControlPanel::FControlPanel(GLFWwindow* Window)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -20,20 +20,22 @@ PSD::FControlPanel::FControlPanel(GLFWwindow* Window)
     std::cout << "GUI system initialized, running on Dear ImGui v" << ImGui::GetVersion() << "\n";
 }
 
-PSD::FControlPanel::~FControlPanel()
+FControlPanel::~FControlPanel()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void PSD::FControlPanel::Update()
+void FControlPanel::Update()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
     ImGui::Begin("Control Panel");
+    ImGui::DragFloat3("Camera position", mCameraPosition, 0.1f);
+    ImGui::Separator();
     ImGui::ColorEdit3("Background Color", mClearColor);
     ImGui::ColorEdit3("Object Color", mObjectColor);
     ImGui::Separator();
@@ -41,7 +43,7 @@ void PSD::FControlPanel::Update()
     ImGui::End();
 }
 
-void PSD::FControlPanel::Render() const
+void FControlPanel::Render() const
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -1,7 +1,13 @@
 #include <memory>
 
 #include "PSD.h"
+#include "GeometryObject.h"
+
 #include "ControlPanel.h"
+#include "Camera.h"
+
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
 
 class PSDApplication : public PSD::FApplication
 {
@@ -10,42 +16,35 @@ public:
 
     void OnStart() override
     {
-        mControlPanel = std::make_unique<PSD::FControlPanel>(GetWindow());
+        mCamera = std::make_unique<FCamera>(GetWindow(), glm::vec3(0.0f, 0.0f, 5.0f));
+
+        mControlPanel = std::make_unique<FControlPanel>(GetWindow());
         mControlPanel->mClearColor = GetClearColor();
         mControlPanel->mObjectColor = mObjectColor;
         mControlPanel->bIsWireframeEnabled = IsWireframeEnabled();
+        mControlPanel->mCameraPosition = mCamera->GetPosition();
 
         mTestShader = std::make_unique<PSD::FShader>("Test");
-        mQuadMesh = std::make_unique<PSD::FVertexArray>();
-
-        constexpr unsigned int Indices[]{
-                0, 1, 2,
-                0, 2, 3
-        };
-        mQuadMesh->SetIndexBuffer(Indices, sizeof(Indices) / sizeof(unsigned int));
-
-        constexpr float Positions[]{
-                0.8f, 0.8f, 0.0f,
-                -0.8f, 0.8f, 0.0f,
-                -0.8f, -0.8f, 0.0f,
-                0.8f, -0.8f, 0.0f
-        };
-        mQuadMesh->AddVertexBuffer(Positions, sizeof(Positions) / sizeof(float));
-
-        mSphereMesh = PSD::LoadMesh("SphereMediumPoly");
+        mSphere = std::make_unique<FGeometryObject>(
+                PSD::LoadMesh("Cube"),
+                glm::vec3(0.0f, 0.0f, 0.0f)
+        );
     }
 
     void OnUpdate() override
     {
+        mCamera->Update();
         mControlPanel->Update();
     }
 
     void OnRender() override
     {
+        mTestShader->SetMatrix4f("ProjectionMatrix", mCamera->GetProjectionMatrix());
+        mTestShader->SetMatrix4f("ViewMatrix", mCamera->GetViewMatrix());
+        mTestShader->SetMatrix4f("ModelMatrix", glm::translate(glm::mat4(1.0f), mSphere->GetPosition()));
         mTestShader->SetVector3f("VertexColor", mObjectColor);
         mTestShader->Bind();
-        //mQuadMesh->SimpleDraw();
-        mSphereMesh->SimpleDraw();
+        mSphere->Draw();
 
         mControlPanel->Render();
     }
@@ -53,11 +52,11 @@ public:
 private:
     float mObjectColor[3] = { 1.0f, 1.0f, 0.0f };
 
-    std::unique_ptr<PSD::FShader> mTestShader;
-    std::unique_ptr<PSD::FVertexArray> mQuadMesh;
-    std::unique_ptr<PSD::FControlPanel> mControlPanel;
+    std::unique_ptr<FGeometryObject> mSphere;
+    std::unique_ptr<FCamera> mCamera;
 
-    std::unique_ptr<PSD::FVertexArray> mSphereMesh;
+    std::unique_ptr<PSD::FShader> mTestShader;
+    std::unique_ptr<FControlPanel> mControlPanel;
 };
 
 int main()

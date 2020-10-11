@@ -6,6 +6,7 @@
 #define PSD_SHADER_H
 
 #include "GL/gl3w.h"
+#include "glm/glm.hpp"
 
 #include <string>
 #include <map>
@@ -24,11 +25,13 @@ namespace PSD
         void SetVector3f(const std::string&, const float&, const float&, const float&);
         void SetVector3f(const std::string&, float*);
 
+        void SetMatrix4f(const std::string&, const glm::mat4&);
+
     private:
         GLuint mProgramID;
         std::map<std::string, int> mUniformLocations;
 
-        int GetUniformLocation(const std::string&);
+        int GetUniformLocation(const std::string&) const;
     };
 }
 
