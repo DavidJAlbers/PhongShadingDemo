@@ -16,6 +16,8 @@ namespace PSD
     class FVertexArray
     {
     public:
+        static constexpr int VERTEX_SIZE = 3;
+
         FVertexArray();
         ~FVertexArray();
 
@@ -34,7 +36,6 @@ namespace PSD
         unsigned int mIndicesCount = 0;
         unsigned int mVerticesCount = 0;
 
-        static constexpr int VERTEX_SIZE = 3;
     };
 
     std::unique_ptr<FVertexArray> LoadMesh(const std::string&);

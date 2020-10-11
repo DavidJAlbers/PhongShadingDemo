@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <iostream>
 
 PSD::FVertexArray::FVertexArray()
 {
@@ -72,7 +73,8 @@ std::unique_ptr<PSD::FVertexArray> PSD::LoadMesh(const std::string& Name)
 
     std::vector<float> VertexPositions;
     std::vector<float> VertexNormals;
-    std::vector<unsigned int> Indices;
+    std::vector<unsigned int> PositionIndices;
+    std::vector<unsigned int> NormalIndices;
 
     std::string Line;
     std::string LineType;
@@ -82,9 +84,13 @@ std::unique_ptr<PSD::FVertexArray> PSD::LoadMesh(const std::string& Name)
     struct FIntVec {
         unsigned int First, Second, Third;
     };
+    struct FTwoIntVecs {
+        FIntVec PositionIndices;
+        FIntVec NormalIndices;
+    };
     union ULineData {
         FFloatVec VertexData;
-        FIntVec IndexData;
+        FTwoIntVecs IndexData;
     } LineData;
     while (std::getline(File, Line))
     {
@@ -113,21 +119,23 @@ std::unique_ptr<PSD::FVertexArray> PSD::LoadMesh(const std::string& Name)
             VertexNormals.push_back(LineData.VertexData.Y);
             VertexNormals.push_back(LineData.VertexData.Z);
         }
-        else if (LineType == "f") // z. B. f 1//1 14//1 13//1
+        else if (LineType == "f") // z. B. f 3//10 15//11 25//12
         {
-            int ToDiscard;
-            Input >> LineData.IndexData.First;
+            Input >> LineData.IndexData.PositionIndices.First;
             Input.ignore(2);
-            Input >> ToDiscard;
-            Input >> LineData.IndexData.Second;
+            Input >> LineData.IndexData.NormalIndices.First;
+            Input >> LineData.IndexData.PositionIndices.Second;
             Input.ignore(2);
-            Input >> ToDiscard;
-            Input >> LineData.IndexData.Third;
+            Input >> LineData.IndexData.NormalIndices.Second;
+            Input >> LineData.IndexData.PositionIndices.Third;
             Input.ignore(2);
-            Input >> ToDiscard;
-            Indices.push_back(LineData.IndexData.First - 1); // Das OBJ-Format beginnt bei 1, wir aber bei 0
-            Indices.push_back(LineData.IndexData.Second - 1);
-            Indices.push_back(LineData.IndexData.Third - 1);
+            Input >> LineData.IndexData.NormalIndices.Third;
+            PositionIndices.push_back(LineData.IndexData.PositionIndices.First - 1); // Das OBJ-Format beginnt bei 1, wir aber bei 0
+            PositionIndices.push_back(LineData.IndexData.PositionIndices.Second - 1);
+            PositionIndices.push_back(LineData.IndexData.PositionIndices.Third - 1);
+            NormalIndices.push_back(LineData.IndexData.NormalIndices.First - 1);
+            NormalIndices.push_back(LineData.IndexData.NormalIndices.Second - 1);
+            NormalIndices.push_back(LineData.IndexData.NormalIndices.Third - 1);
         }
         else // Etwas anderes, was nicht unterstützt wird
         {
@@ -135,9 +143,45 @@ std::unique_ptr<PSD::FVertexArray> PSD::LoadMesh(const std::string& Name)
         }
     }
 
+    auto size = VertexNormals.size();
+    float VertexNormalsReordered[size];
+    auto VERTEX_SIZE = PSD::FVertexArray::VERTEX_SIZE;
+    for (int i = 0; i < PositionIndices.size(); ++i)
+    {
+        VertexNormalsReordered[VERTEX_SIZE * PositionIndices[i]] = VertexNormals[VERTEX_SIZE * NormalIndices[i]];
+        VertexNormalsReordered[VERTEX_SIZE * PositionIndices[i] + 1] = VertexNormals[VERTEX_SIZE * NormalIndices[i] + 1];
+        VertexNormalsReordered[VERTEX_SIZE * PositionIndices[i] + 2] = VertexNormals[VERTEX_SIZE * NormalIndices[i] + 2];
+    }
+
+//    std::cout << "Vertex Positions:\n";
+//    for (int i = 0; i < VertexPositions.size(); ++i)
+//    {
+//        std::cout << VertexPositions[i] << " " << VertexPositions[++i] << " " << VertexPositions[++i] << "\n";
+//    }
+//    std::cout << "Vertex Normals:\n";
+//    for (int i = 0; i < VertexNormals.size(); ++i)
+//    {
+//        std::cout << VertexNormals[i] << " " << VertexNormals[++i] << " " << VertexNormals[++i] << "\n";
+//    }
+//    std::cout << "Position Indices:\n";
+//    for (int i = 0; i < PositionIndices.size(); ++i)
+//    {
+//        std::cout << PositionIndices[i] << " " << PositionIndices[++i] << " " << PositionIndices[++i] << "\n";
+//    }
+//    std::cout << "Normal Indices:\n";
+//    for (int i = 0; i < NormalIndices.size(); ++i)
+//    {
+//        std::cout << NormalIndices[i] << " " << NormalIndices[++i] << " " << NormalIndices[++i] << "\n";
+//    }
+//    std::cout << "Vertex Normals Reordered:\n";
+//    for (int i = 0; i < VertexNormals.size(); ++i)
+//    {
+//        std::cout << VertexNormalsReordered[i] << " " << VertexNormalsReordered[++i] << " " << VertexNormalsReordered[++i] << "\n";
+//    }
+
     std::unique_ptr<FVertexArray> VertexArray = std::make_unique<FVertexArray>();
-    VertexArray->SetIndexBuffer(Indices.data(), Indices.size());
+    VertexArray->SetIndexBuffer(PositionIndices.data(), PositionIndices.size());
     VertexArray->AddVertexBuffer(VertexPositions.data(), VertexPositions.size());
-    VertexArray->AddVertexBuffer(VertexNormals.data(), VertexNormals.size());
+    //VertexArray->AddVertexBuffer(VertexNormalsReordered, VertexNormals.size());
     return VertexArray;
 }
