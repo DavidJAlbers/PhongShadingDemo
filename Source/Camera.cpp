@@ -2,14 +2,11 @@
 // Copyright (c) 2019-2020 David J Albers. All rights reserved.
 //
 
+#include <iostream>
 #include "Camera.h"
 
-#include "glm/ext.hpp"
-
-void FCamera::Update()
-{
-
-}
+static constexpr float MOVEMENT_SPEED = 0.001f;
+static constexpr float ROTATION_SPEED = 0.1f;
 
 glm::mat4 FCamera::GetProjectionMatrix()
 {
@@ -20,5 +17,64 @@ glm::mat4 FCamera::GetProjectionMatrix()
 
 glm::mat4 FCamera::GetViewMatrix()
 {
-    return glm::lookAt(mPosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    return glm::lookAt(mPosition, mPosition + mDirection, mUp);
+}
+
+void FCamera::Update(const PSD::FInputSource* InputSource)
+{
+    if (InputSource->IsKeyDown(PSD::W))
+    {
+        mPosition += mDirection * MOVEMENT_SPEED;
+    }
+    if (InputSource->IsKeyDown(PSD::S))
+    {
+        mPosition -= mDirection * MOVEMENT_SPEED;
+    }
+
+    if (InputSource->IsKeyDown(PSD::A))
+    {
+        mPosition -= glm::normalize(glm::cross(mDirection, mUp)) * MOVEMENT_SPEED;
+    }
+    if (InputSource->IsKeyDown(PSD::D))
+    {
+        mPosition += glm::normalize(glm::cross(mDirection, mUp)) * MOVEMENT_SPEED;
+    }
+
+    if (InputSource->IsKeyDown(PSD::LSHIFT))
+    {
+        mPosition.y -= MOVEMENT_SPEED;
+    }
+    if (InputSource->IsKeyDown(PSD::SPACE))
+    {
+        mPosition.y += MOVEMENT_SPEED;
+    }
+
+    if (InputSource->IsRightMouseButtonDown())
+    {
+        if (!bIsDragging) // Drag gerade erst begonnen
+        {
+            InputSource->GetMousePosition(&mPreviousX, &mPreviousY);
+            bIsDragging = true;
+            return;
+        }
+
+        double X, Y;
+        InputSource->GetMousePosition(&X, &Y);
+        double DeltaX = X - mPreviousX, DeltaY = mPreviousY - Y;
+        mPreviousX = X, mPreviousY = Y;
+
+        mYaw += DeltaX * ROTATION_SPEED, mPitch += DeltaY * ROTATION_SPEED;
+        mPitch = glm::clamp(mPitch, -89.0, 89.0);
+
+        glm::vec3 Direction;
+        Direction.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        Direction.y = sin(glm::radians(mPitch));
+        Direction.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        mDirection = glm::normalize(Direction);
+    }
+    else
+    {
+        bIsDragging = false;
+    }
+
 }

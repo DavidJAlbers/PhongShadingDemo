@@ -7,22 +7,23 @@
 
 #include "glm/glm.hpp"
 
-#include "Core/VertexArray.h"
+#include "PSD.h"
 
 #include <memory>
 
 class FGeometryObject
 {
 public:
-    explicit FGeometryObject(std::unique_ptr<PSD::FVertexArray> Mesh, glm::vec3 Position) : mMesh(std::move(Mesh)),
-                                                                                            mPosition(Position) {}
+    explicit FGeometryObject(std::unique_ptr<PSD::FVertexArray> Mesh, glm::vec3 Position, float Scale)
+    : mMesh(std::move(Mesh)), mPosition(Position), mScale(Scale) { }
 
     void Draw();
 
-    inline glm::vec3 GetPosition() { return mPosition; }
+    glm::mat4 GetModelMatrix();
 
 private:
     glm::vec3 mPosition;
+    float mScale;
 
     std::unique_ptr<PSD::FVertexArray> mMesh;
 };

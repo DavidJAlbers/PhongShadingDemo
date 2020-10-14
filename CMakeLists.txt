@@ -15,6 +15,7 @@ add_executable(PSD
         Source/Core/Application.h
         Source/Core/VertexArray.cpp
         Source/Core/VertexArray.h
+        Source/Core/Input.h
         Source/ControlPanel.cpp
         Source/ControlPanel.h
         Source/PSD.h
@@ -22,6 +23,8 @@ add_executable(PSD
         Source/GeometryObject.h
         Source/Camera.cpp
         Source/Camera.h
+        Source/Renderer.cpp
+        Source/Renderer.h
         Vendor/ImGui/imgui.cpp
         Vendor/ImGui/imgui_draw.cpp
         Vendor/ImGui/imgui_widgets.cpp

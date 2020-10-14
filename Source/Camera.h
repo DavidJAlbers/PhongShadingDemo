@@ -5,8 +5,8 @@
 #ifndef PSD_CAMERA_H
 #define PSD_CAMERA_H
 
+#include "PSD.h"
 
-#include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 
@@ -15,7 +15,7 @@ class FCamera
 public:
     explicit FCamera(GLFWwindow* Window, glm::vec3 Position) : mWindow(Window), mPosition(Position) {}
 
-    void Update();
+    void Update(const PSD::FInputSource*);
 
     glm::mat4 GetProjectionMatrix();
     glm::mat4 GetViewMatrix();
@@ -23,8 +23,17 @@ public:
     float* GetPosition() { return glm::value_ptr(mPosition); }
 
 private:
-    glm::vec3 mPosition;
+    glm::vec3 mPosition = glm::vec3(0.0f, 0.0f, 5.0f);
+    glm::vec3 mDirection = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 mUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    double mYaw = -90.0, mPitch = 0.0;
+
     GLFWwindow* mWindow;
+
+    double mPreviousX;
+    double mPreviousY;
+    bool bIsDragging = false;
 };
 
 

@@ -3,9 +3,8 @@
 layout (location = 0) in vec3 InVertexPosition;
 
 uniform mat4 ModelMatrix;
-uniform mat4 ViewMatrix;
-uniform mat4 ProjectionMatrix;
+uniform mat4 ProjectionViewMatrix;
 
 void main() {
-    gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(InVertexPosition, 1.0);
+    gl_Position = ProjectionViewMatrix * ModelMatrix * vec4(InVertexPosition, 1.0);
 }

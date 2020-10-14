@@ -7,6 +7,7 @@
 
 #include "GL/gl3w.h"
 #include "Core/Application.h"
+#include "Core/Input.h"
 #include "Core/VertexArray.h"
 #include "Core/Shader.h"
 

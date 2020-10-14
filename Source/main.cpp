@@ -1,13 +1,13 @@
 #include <memory>
 
 #include "PSD.h"
-#include "GeometryObject.h"
 
+#include "GeometryObject.h"
 #include "ControlPanel.h"
+#include "Renderer.h"
 #include "Camera.h"
 
 #include "glm/glm.hpp"
-#include "glm/ext.hpp"
 
 class PSDApplication : public PSD::FApplication
 {
@@ -16,35 +16,42 @@ public:
 
     void OnStart() override
     {
-        mCamera = std::make_unique<FCamera>(GetWindow(), glm::vec3(0.0f, 0.0f, 5.0f));
+        mSphere = std::make_unique<FGeometryObject>(
+                PSD::LoadMesh("SphereLowPoly"),
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                1.0f
+        );
+        mSphere2 = std::make_shared<FGeometryObject>(
+                PSD::LoadMesh("SphereLowPoly"),
+                glm::vec3(0.0f, 0.0f, -5.0f),
+                2.0f
+        );
+        mTestShader = std::make_shared<PSD::FShader>("Test");
+        mCamera = std::make_shared<FCamera>(ExposeNativeWindow(), glm::vec3(0.0f, 0.0f, 5.0f));
 
-        mControlPanel = std::make_unique<FControlPanel>(GetWindow());
+        mRenderer = std::make_unique<FRenderer>();
+
+        mControlPanel = std::make_unique<FControlPanel>(ExposeNativeWindow());
         mControlPanel->mClearColor = GetClearColor();
         mControlPanel->mObjectColor = mObjectColor;
         mControlPanel->bIsWireframeEnabled = IsWireframeEnabled();
         mControlPanel->mCameraPosition = mCamera->GetPosition();
-
-        mTestShader = std::make_unique<PSD::FShader>("Test");
-        mSphere = std::make_unique<FGeometryObject>(
-                PSD::LoadMesh("Cube"),
-                glm::vec3(0.0f, 0.0f, 0.0f)
-        );
     }
 
     void OnUpdate() override
     {
-        mCamera->Update();
+        mCamera->Update(this);
         mControlPanel->Update();
     }
 
     void OnRender() override
     {
-        mTestShader->SetMatrix4f("ProjectionMatrix", mCamera->GetProjectionMatrix());
-        mTestShader->SetMatrix4f("ViewMatrix", mCamera->GetViewMatrix());
-        mTestShader->SetMatrix4f("ModelMatrix", glm::translate(glm::mat4(1.0f), mSphere->GetPosition()));
         mTestShader->SetVector3f("VertexColor", mObjectColor);
-        mTestShader->Bind();
-        mSphere->Draw();
+
+        mRenderer->BeginScene(mTestShader, mCamera);
+        mRenderer->DrawSingle(mSphere);
+        mRenderer->DrawSingle(mSphere2);
+        mRenderer->EndScene();
 
         mControlPanel->Render();
     }
@@ -52,10 +59,13 @@ public:
 private:
     float mObjectColor[3] = { 1.0f, 1.0f, 0.0f };
 
-    std::unique_ptr<FGeometryObject> mSphere;
-    std::unique_ptr<FCamera> mCamera;
+    std::shared_ptr<FGeometryObject> mSphere;
+    std::shared_ptr<FGeometryObject> mSphere2;
+    std::shared_ptr<FCamera> mCamera;
+    std::shared_ptr<PSD::FShader> mTestShader;
 
-    std::unique_ptr<PSD::FShader> mTestShader;
+    std::unique_ptr<FRenderer> mRenderer;
+
     std::unique_ptr<FControlPanel> mControlPanel;
 };
 

@@ -7,11 +7,13 @@
 
 #include "GLFW/glfw3.h"
 
+#include "Input.h"
+
 #include <string>
 
 namespace PSD
 {
-    class FApplication
+    class FApplication : public FInputSource
     {
     public:
         explicit FApplication(const std::string& Name);
@@ -22,8 +24,11 @@ namespace PSD
         inline float* GetClearColor() { return mClearColor; }
         inline bool* IsWireframeEnabled() { return &bIsWireframeEnabled; }
 
-        // FIXME Temporär, bis vollständig gekapselt
-        inline GLFWwindow* GetWindow() { return mWindowHandle; }
+        inline bool IsKeyDown(EKey Key) const override { return glfwGetKey(mWindowHandle, Key) == GLFW_PRESS; }
+        inline bool IsRightMouseButtonDown() const override { return glfwGetMouseButton(mWindowHandle, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS; }
+        inline void GetMousePosition(double* X, double* Y) const override { glfwGetCursorPos(mWindowHandle, X, Y); }
+
+        inline GLFWwindow* ExposeNativeWindow() { return mWindowHandle; }
 
     protected:
         virtual void OnStart() = 0;
