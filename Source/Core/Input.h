@@ -15,6 +15,7 @@ namespace PSD
         A = GLFW_KEY_A,
         S = GLFW_KEY_S,
         D = GLFW_KEY_D,
+        X = GLFW_KEY_X,
         LSHIFT = GLFW_KEY_LEFT_SHIFT,
         SPACE = GLFW_KEY_SPACE
     };

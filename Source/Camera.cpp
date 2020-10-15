@@ -49,7 +49,7 @@ void FCamera::Update(const PSD::FInputSource* InputSource)
         mPosition.y += MOVEMENT_SPEED;
     }
 
-    if (InputSource->IsRightMouseButtonDown())
+    if (InputSource->IsKeyDown(PSD::X) || InputSource->IsRightMouseButtonDown())
     {
         if (!bIsDragging) // Drag gerade erst begonnen
         {
