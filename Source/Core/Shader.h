@@ -23,7 +23,7 @@ namespace PSD
         void Bind() const;
 
         void SetVector3f(const std::string&, const float&, const float&, const float&);
-        void SetVector3f(const std::string&, float*);
+        void SetVector3f(const std::string&, const float*);
 
         void SetMatrix4f(const std::string&, const glm::mat4&);
 

@@ -36,7 +36,7 @@ namespace PSD
         virtual void OnRender() = 0;
 
     private:
-        float mClearColor[3] { 1.0f, 1.0f, 1.0f };
+        float mClearColor[3] { 0.15f, 0.15f, 0.15f };
         bool bIsWireframeEnabled = false;
 
         GLFWwindow* mWindowHandle;

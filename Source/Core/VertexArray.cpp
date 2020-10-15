@@ -182,6 +182,11 @@ std::unique_ptr<PSD::FVertexArray> PSD::LoadMesh(const std::string& Name)
     std::unique_ptr<FVertexArray> VertexArray = std::make_unique<FVertexArray>();
     VertexArray->SetIndexBuffer(PositionIndices.data(), PositionIndices.size());
     VertexArray->AddVertexBuffer(VertexPositions.data(), VertexPositions.size());
-    //VertexArray->AddVertexBuffer(VertexNormalsReordered, VertexNormals.size());
+    VertexArray->AddVertexBuffer(VertexNormalsReordered, VertexNormals.size());
     return VertexArray;
+}
+
+std::unique_ptr<PSD::FVertexArray> PSD::GetDefaultCube()
+{
+    return PSD::LoadMesh("Cube");
 }

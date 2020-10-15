@@ -39,6 +39,7 @@ namespace PSD
     };
 
     std::unique_ptr<FVertexArray> LoadMesh(const std::string&);
+    std::unique_ptr<FVertexArray> GetDefaultCube();
 
 }
 

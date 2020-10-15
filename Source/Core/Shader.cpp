@@ -102,7 +102,7 @@ void PSD::FShader::SetVector3f(const std::string& Name, const float& X, const fl
     glProgramUniform3f(mProgramID, GetUniformLocation(Name), X, Y, Z);
 }
 
-void PSD::FShader::SetVector3f(const std::string& Name, float* Value)
+void PSD::FShader::SetVector3f(const std::string& Name, const float* Value)
 {
     glProgramUniform3fv(mProgramID, GetUniformLocation(Name), 1, Value);
 }

@@ -17,25 +17,27 @@ public:
     void OnStart() override
     {
         mSphere = std::make_unique<FGeometryObject>(
-                PSD::LoadMesh("SphereLowPoly"),
+                PSD::LoadMesh("SphereMediumPoly"),
                 glm::vec3(0.0f, 0.0f, 0.0f),
-                1.0f
+                1.0f,
+                glm::vec3(1.0f, 0.0f, 0.0f)
         );
         mSphere2 = std::make_shared<FGeometryObject>(
-                PSD::LoadMesh("SphereLowPoly"),
+                PSD::LoadMesh("SphereHighPoly"),
                 glm::vec3(0.0f, 0.0f, -5.0f),
-                2.0f
+                2.0f,
+                glm::vec3(0.0f, 0.0f, 1.0f)
         );
-        mTestShader = std::make_shared<PSD::FShader>("Test");
+        mTestShader = std::make_shared<PSD::FShader>("Phong");
         mCamera = std::make_shared<FCamera>(ExposeNativeWindow(), glm::vec3(0.0f, 0.0f, 5.0f));
 
         mRenderer = std::make_unique<FRenderer>();
 
         mControlPanel = std::make_unique<FControlPanel>(ExposeNativeWindow());
         mControlPanel->mClearColor = GetClearColor();
-        mControlPanel->mObjectColor = mObjectColor;
         mControlPanel->bIsWireframeEnabled = IsWireframeEnabled();
         mControlPanel->mCameraPosition = mCamera->GetPosition();
+        mControlPanel->mLightDirection = mLightDirection;
     }
 
     void OnUpdate() override
@@ -46,7 +48,7 @@ public:
 
     void OnRender() override
     {
-        mTestShader->SetVector3f("VertexColor", mObjectColor);
+        mTestShader->SetVector3f("LightDirection", mLightDirection);
 
         mRenderer->BeginScene(mTestShader, mCamera);
         mRenderer->DrawSingle(mSphere);
@@ -57,7 +59,7 @@ public:
     }
 
 private:
-    float mObjectColor[3] = { 1.0f, 1.0f, 0.0f };
+    float mLightDirection[3] =  { -0.5f, -1.0f, 0.0f };
 
     std::shared_ptr<FGeometryObject> mSphere;
     std::shared_ptr<FGeometryObject> mSphere2;

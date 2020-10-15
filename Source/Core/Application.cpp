@@ -87,6 +87,9 @@ void PSD::FApplication::Start()
     glDebugMessageCallback(&GLErrorCallback, nullptr);
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+
     std::cout << "Rendering context created, running on OpenGL " << glGetString(GL_VERSION) << "\n";
 
     OnStart();
@@ -101,14 +104,18 @@ void PSD::FApplication::Start()
         glfwGetFramebufferSize(mWindowHandle, &Width, &Height);
         glViewport(0, 0, Width, Height);
         glClearBufferfv(GL_COLOR, 0, mClearColor);
+        constexpr float One = 1.0f;
+        glClearBufferfv(GL_DEPTH, 0, &One);
 
         if (bIsWireframeEnabled)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDisable(GL_CULL_FACE);
         }
         else
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glEnable(GL_CULL_FACE);
         }
 
         OnRender();

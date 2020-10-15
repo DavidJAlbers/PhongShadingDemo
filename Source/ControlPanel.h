@@ -15,8 +15,8 @@ public:
     void Render() const;
 private:
     float* mCameraPosition; // kontrolliert FCamera::mPosition
+    float* mLightDirection; // kontrolliert PSDApplication::mLightDirection
     float* mClearColor; // kontrolliert PSD::FApplication::mClearColor
-    float* mObjectColor; // kontrolliert PSDApplication::mObjectColor
     bool* bIsWireframeEnabled; // kontrolliert PSD::FApplication::bIsWireframeEnabled
     friend class PSDApplication;
 };

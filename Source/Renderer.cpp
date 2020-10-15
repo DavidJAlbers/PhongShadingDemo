@@ -21,11 +21,13 @@ void FRenderer::BeginScene(std::shared_ptr<PSD::FShader> Shader, std::shared_ptr
     mCamera = std::move(Camera);
     glm::mat4 ProjectionViewMatrix = mCamera->GetProjectionMatrix() * mCamera->GetViewMatrix();
     mShader->SetMatrix4f("ProjectionViewMatrix", ProjectionViewMatrix);
+    mShader->SetVector3f("CameraPosition", mCamera->GetPosition());
     mShader->Bind();
 }
 
 void FRenderer::DrawSingle(std::shared_ptr<FGeometryObject> Object)
 {
+    mShader->SetVector3f("ObjectColor", glm::value_ptr(Object->GetColor()));
     mShader->SetMatrix4f("ModelMatrix", Object->GetModelMatrix());
     Object->Draw();
 }

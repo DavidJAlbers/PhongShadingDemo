@@ -36,10 +36,12 @@ void FControlPanel::Update()
     ImGui::Begin("Control Panel");
     ImGui::DragFloat3("Camera position", mCameraPosition, 0.1f);
     ImGui::Separator();
+    ImGui::DragFloat3("Light direction", mLightDirection);
     ImGui::ColorEdit3("Background Color", mClearColor);
-    ImGui::ColorEdit3("Object Color", mObjectColor);
     ImGui::Separator();
     ImGui::Checkbox("Enable Wireframe Rendering", bIsWireframeEnabled);
+    ImGui::Spacing();
+    ImGui::TextDisabled("Copyright (c) 2019-2020 David J Albers.");
     ImGui::End();
 }
 
