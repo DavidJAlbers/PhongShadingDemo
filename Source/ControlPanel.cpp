@@ -50,7 +50,8 @@ void FControlPanel::Update()
     ImGui::End();
 
     ImGui::Begin("Runtime information");
-    ImGui::Text("%d FPS", (int) (ImGui::GetIO().Framerate / 100.0f));
+    ImGui::Text("%d FPS", (int) ImGui::GetIO().Framerate);
+    ImGui::Text("%d ms delta time", (int) (ImGui::GetIO().DeltaTime * 1000.0f));
     PrintCopyright();
     ImGui::End();
 }

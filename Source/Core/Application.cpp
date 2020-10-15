@@ -136,6 +136,5 @@ double PSD::FApplication::GetDeltaTime() {
     double CurrentTime = glfwGetTime();
     double DeltaTime = CurrentTime - mPreviousTime;
     mPreviousTime = CurrentTime;
-    std::cout << DeltaTime << '\n';
     return DeltaTime;
 }
