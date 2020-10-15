@@ -6,7 +6,7 @@
 #include "Camera.h"
 
 static constexpr float MOVEMENT_SPEED = 5.0f;
-static constexpr float ROTATION_SPEED = 500.0f;
+static constexpr float ROTATION_SPEED = 5.0f;
 
 glm::mat4 FCamera::GetProjectionMatrix()
 {
