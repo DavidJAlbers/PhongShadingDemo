@@ -28,6 +28,8 @@ namespace PSD
         inline bool IsRightMouseButtonDown() const override { return glfwGetMouseButton(mWindowHandle, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS; }
         inline void GetMousePosition(double* X, double* Y) const override { glfwGetCursorPos(mWindowHandle, X, Y); }
 
+        double GetDeltaTime();
+
         inline GLFWwindow* ExposeNativeWindow() { return mWindowHandle; }
 
     protected:
@@ -41,6 +43,9 @@ namespace PSD
 
         GLFWwindow* mWindowHandle;
         std::string mApplicationName;
+
+        double mPreviousTime;
+        bool bIsFirstFrame = true;
     };
 
     FApplication* GetApplication();

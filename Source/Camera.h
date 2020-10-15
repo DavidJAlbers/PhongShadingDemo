@@ -15,7 +15,7 @@ class FCamera
 public:
     explicit FCamera(GLFWwindow* Window, glm::vec3 Position) : mWindow(Window), mPosition(Position) {}
 
-    void Update(const PSD::FInputSource*);
+    void Update(const PSD::FInputSource*, double DeltaTime);
 
     glm::mat4 GetProjectionMatrix();
     glm::mat4 GetViewMatrix();

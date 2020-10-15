@@ -5,8 +5,8 @@
 #include <iostream>
 #include "Camera.h"
 
-static constexpr float MOVEMENT_SPEED = 0.001f;
-static constexpr float ROTATION_SPEED = 0.1f;
+static constexpr float MOVEMENT_SPEED = 0.1f;
+static constexpr float ROTATION_SPEED = 10.0f;
 
 glm::mat4 FCamera::GetProjectionMatrix()
 {
@@ -20,33 +20,33 @@ glm::mat4 FCamera::GetViewMatrix()
     return glm::lookAt(mPosition, mPosition + mDirection, mUp);
 }
 
-void FCamera::Update(const PSD::FInputSource* InputSource)
+void FCamera::Update(const PSD::FInputSource* InputSource, double DeltaTime)
 {
     if (InputSource->IsKeyDown(PSD::W))
     {
-        mPosition += mDirection * MOVEMENT_SPEED;
+        mPosition += mDirection * MOVEMENT_SPEED * (float) DeltaTime;
     }
     if (InputSource->IsKeyDown(PSD::S))
     {
-        mPosition -= mDirection * MOVEMENT_SPEED;
+        mPosition -= mDirection * MOVEMENT_SPEED * (float) DeltaTime;
     }
 
     if (InputSource->IsKeyDown(PSD::A))
     {
-        mPosition -= glm::normalize(glm::cross(mDirection, mUp)) * MOVEMENT_SPEED;
+        mPosition -= glm::normalize(glm::cross(mDirection, mUp)) * MOVEMENT_SPEED * (float) DeltaTime;
     }
     if (InputSource->IsKeyDown(PSD::D))
     {
-        mPosition += glm::normalize(glm::cross(mDirection, mUp)) * MOVEMENT_SPEED;
+        mPosition += glm::normalize(glm::cross(mDirection, mUp)) * MOVEMENT_SPEED * (float) DeltaTime;
     }
 
     if (InputSource->IsKeyDown(PSD::LSHIFT))
     {
-        mPosition.y -= MOVEMENT_SPEED;
+        mPosition.y -= MOVEMENT_SPEED * (float) DeltaTime;
     }
     if (InputSource->IsKeyDown(PSD::SPACE))
     {
-        mPosition.y += MOVEMENT_SPEED;
+        mPosition.y += MOVEMENT_SPEED * (float) DeltaTime;
     }
 
     if (InputSource->IsKeyDown(PSD::X) || InputSource->IsRightMouseButtonDown())
@@ -63,7 +63,7 @@ void FCamera::Update(const PSD::FInputSource* InputSource)
         double DeltaX = X - mPreviousX, DeltaY = mPreviousY - Y;
         mPreviousX = X, mPreviousY = Y;
 
-        mYaw += DeltaX * ROTATION_SPEED, mPitch += DeltaY * ROTATION_SPEED;
+        mYaw += DeltaX * ROTATION_SPEED * (float) DeltaTime, mPitch += DeltaY * ROTATION_SPEED * (float) DeltaTime;
         mPitch = glm::clamp(mPitch, -89.0, 89.0);
 
         glm::vec3 Direction;

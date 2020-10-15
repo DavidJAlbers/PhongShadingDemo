@@ -42,7 +42,7 @@ public:
 
     void OnUpdate() override
     {
-        mCamera->Update(this);
+        mCamera->Update(this, GetDeltaTime());
         mControlPanel->Update();
     }
 

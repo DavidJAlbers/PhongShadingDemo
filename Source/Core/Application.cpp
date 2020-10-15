@@ -123,3 +123,16 @@ void PSD::FApplication::Start()
         glfwSwapBuffers(mWindowHandle);
     }
 }
+
+double PSD::FApplication::GetDeltaTime() {
+    if (bIsFirstFrame)
+    {
+        bIsFirstFrame = false;
+        mPreviousTime = glfwGetTime();
+        return 0.0;
+    }
+    double CurrentTime = glfwGetTime();
+    double DeltaTime = CurrentTime - mPreviousTime;
+    mPreviousTime = CurrentTime;
+    return DeltaTime;
+}
