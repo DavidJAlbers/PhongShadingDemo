@@ -29,8 +29,8 @@ add_executable(PSD
         Vendor/ImGui/imgui_draw.cpp
         Vendor/ImGui/imgui_widgets.cpp
         Vendor/ImGui/imgui_demo.cpp
-        Vendor/ImGui/examples/imgui_impl_opengl3.cpp
-        Vendor/ImGui/examples/imgui_impl_glfw.cpp)
+        Vendor/ImGui/backends/imgui_impl_opengl3.cpp
+        Vendor/ImGui/backends/imgui_impl_glfw.cpp)
 
 # FIXME Symlinks sind sehr problematisch. Aber copy, copy_if_different und copy_directory übernehmen scheinbar keine Änderungen
 add_custom_command(
@@ -39,7 +39,7 @@ add_custom_command(
 )
 target_include_directories(PSD PRIVATE
         Vendor/ImGui
-        Vendor/ImGui/examples)
+        Vendor/ImGui/backends)
 target_link_libraries(PSD
         gl3w
         glfw

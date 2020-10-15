@@ -27,6 +27,12 @@ FControlPanel::~FControlPanel()
     ImGui::DestroyContext();
 }
 
+static void PrintCopyright()
+{
+    ImGui::Spacing();
+    ImGui::TextDisabled("Copyright (c) 2019-2020 David J Albers.");
+}
+
 void FControlPanel::Update()
 {
     ImGui_ImplOpenGL3_NewFrame();
@@ -40,8 +46,12 @@ void FControlPanel::Update()
     ImGui::ColorEdit3("Background Color", mClearColor);
     ImGui::Separator();
     ImGui::Checkbox("Enable Wireframe Rendering", bIsWireframeEnabled);
-    ImGui::Spacing();
-    ImGui::TextDisabled("Copyright (c) 2019-2020 David J Albers.");
+    PrintCopyright();
+    ImGui::End();
+
+    ImGui::Begin("Runtime information");
+    ImGui::Text("%d FPS", (int) (ImGui::GetIO().Framerate / 100.0f));
+    PrintCopyright();
     ImGui::End();
 }
 

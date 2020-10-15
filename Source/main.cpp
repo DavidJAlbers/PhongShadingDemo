@@ -24,9 +24,15 @@ public:
         );
         mSphere2 = std::make_shared<FGeometryObject>(
                 PSD::LoadMesh("SphereHighPoly"),
-                glm::vec3(0.0f, 0.0f, -5.0f),
+                glm::vec3(0.0f, 0.0f, -10.0f),
                 2.0f,
                 glm::vec3(0.0f, 0.0f, 1.0f)
+        );
+        mSphere3 = std::make_shared<FGeometryObject>(
+                PSD::LoadMesh("SphereLowPoly"),
+                glm::vec3(5.0f, 0.0f, -8.0f),
+                0.5f,
+                glm::vec3(0.0f, 1.0f, 0.0f)
         );
         mTestShader = std::make_shared<PSD::FShader>("Phong");
         mCamera = std::make_shared<FCamera>(ExposeNativeWindow(), glm::vec3(0.0f, 0.0f, 5.0f));
@@ -53,6 +59,7 @@ public:
         mRenderer->BeginScene(mTestShader, mCamera);
         mRenderer->DrawSingle(mSphere);
         mRenderer->DrawSingle(mSphere2);
+        mRenderer->DrawSingle(mSphere3);
         mRenderer->EndScene();
 
         mControlPanel->Render();
@@ -63,6 +70,7 @@ private:
 
     std::shared_ptr<FGeometryObject> mSphere;
     std::shared_ptr<FGeometryObject> mSphere2;
+    std::shared_ptr<FGeometryObject> mSphere3;
     std::shared_ptr<FCamera> mCamera;
     std::shared_ptr<PSD::FShader> mTestShader;
 
