@@ -84,6 +84,8 @@ void PSD::FApplication::Start()
         std::exit(-1);
     }
 
+    glfwSwapInterval(1);
+
     glDebugMessageCallback(&GLErrorCallback, nullptr);
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 
@@ -134,5 +136,6 @@ double PSD::FApplication::GetDeltaTime() {
     double CurrentTime = glfwGetTime();
     double DeltaTime = CurrentTime - mPreviousTime;
     mPreviousTime = CurrentTime;
+    std::cout << DeltaTime << '\n';
     return DeltaTime;
 }
